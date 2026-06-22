@@ -14,10 +14,6 @@
          preserveAspectRatio="xMidYMid slice" aria-hidden="true"
          xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <pattern id="paper-grain" width="72" height="72" patternUnits="userSpaceOnUse">
-          <path d="M9 12h19M41 7h13M22 36h28M4 58h16M58 48h9" stroke="#2D5F94" stroke-width="1" opacity="0.16"/>
-          <path d="M14 24h5M36 51h10M61 18h3" stroke="#F8F0DC" stroke-width="1" opacity="0.34"/>
-        </pattern>
         <linearGradient id="sky-fade" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stop-color="#F6E7C4"/>
           <stop offset="0.62" stop-color="#D9B36A"/>
@@ -27,7 +23,6 @@
 
       <rect width="1440" height="520" fill="#0D3060"/>
       <rect width="1440" height="310" fill="url(#sky-fade)"/>
-      <rect width="1440" height="520" fill="url(#paper-grain)"/>
 
       <g class="sun-disc">
         <circle cx="1118" cy="118" r="68" fill="#D1503D"/>
@@ -90,17 +85,6 @@
       <div class="header-rule"></div>
       <p id="site-subtitle">資料一覧</p>
     </div>
-    <!-- 波形の遷移 (header→washi) -->
-    <svg class="header-wave" viewBox="0 0 1440 88"
-         preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0,18 C240,62 480,4 720,30 C960,56 1200,4 1440,26
-               L1440,88 L0,88 Z" fill="#0D3060"/>
-      <path d="M0,40 C180,70 360,20 540,46 C720,72 900,24 1080,50
-               C1260,72 1380,48 1440,50 L1440,88 L0,88 Z"
-            fill="#1050A0" opacity="0.72"/>
-      <path d="M0,66 C300,54 600,78 900,64 C1100,55 1300,70 1440,65
-               L1440,88 L0,88 Z" fill="#F2EBD9"/>
-    </svg>
   </header>
 
   <!-- ── Config Bar ── -->
