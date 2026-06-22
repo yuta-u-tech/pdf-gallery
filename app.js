@@ -76,6 +76,9 @@ async function fetchContents(owner, repo, path) {
 function buildCard(file, index) {
   const sizeKB = (file.size / 1024).toFixed(1)
   const downloadUrl = file.download_url
+  // raw.githubusercontent.com は iframe 埋め込み不可のため
+  // 同リポジトリなら GitHub Pages URL でプレビューする
+  const viewUrl = `https://${currentOwner}.github.io/${currentRepo}/${file.path}`
 
   const card = document.createElement('div')
   card.className = 'pdf-card'
@@ -96,7 +99,7 @@ function buildCard(file, index) {
         <p class="card-size">${sizeKB} KB</p>
       </div>
       <div class="card-actions">
-        <button class="btn-view" onclick="viewPDF('${escapeHtml(downloadUrl)}', '${escapeHtml(file.name)}')">
+        <button class="btn-view" onclick="viewPDF('${escapeHtml(viewUrl)}', '${escapeHtml(file.name)}')">
           閲覧
         </button>
         <a class="btn-download" href="${escapeHtml(downloadUrl)}" download="${escapeHtml(file.name)}" target="_blank">
