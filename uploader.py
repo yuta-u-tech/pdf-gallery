@@ -7,10 +7,13 @@ PDF リポジトリの管理 GUI ツール
   pip install git-filter-repo   # 「履歴を削除して置換」機能を使う場合のみ
 """
 
+import argparse
+import getpass
 import hashlib
 import json
 import subprocess
 import shutil
+import sys
 import tkinter as tk
 from datetime import datetime
 from pathlib import Path
@@ -440,8 +443,76 @@ class App(tk.Tk):
             messagebox.showerror("エラー", "削除に失敗しました。ログを確認してください。")
 
 
+# ── CLI ──────────────────────────────────────────────────────────────────────
+
+def _cli_show(cfg: Config):
+    print(f"  repo_path : {cfg.repo_path  or '(未設定)'}")
+    print(f"  subfolder : {cfg.subfolder  or '(未設定 = ルート直下)'}")
+    print(f"  password  : {'設定済み' if cfg.admin_pw_hash else '(未設定)'}")
+
+
+def _cli(argv):
+    p = argparse.ArgumentParser(
+        prog="uploader.py",
+        description="PDF Gallery Uploader — CLI / GUI 管理ツール",
+    )
+    sub = p.add_subparsers(dest="cmd", metavar="COMMAND")
+
+    # config サブコマンド
+    cp = sub.add_parser("config", help="設定の表示・変更")
+    cs = cp.add_subparsers(dest="action", metavar="ACTION")
+
+    cs.add_parser("show", help="現在の設定を表示")
+
+    set_p = cs.add_parser("set", help="設定値を変更")
+    set_p.add_argument(
+        "key",
+        choices=["repo", "subfolder", "password"],
+        help="変更するキー",
+    )
+    set_p.add_argument("value", nargs="?", default=None,
+                       help="設定する値 (password は省略可 → プロンプト入力)")
+
+    args = p.parse_args(argv)
+    cfg  = Config()
+
+    if args.cmd == "config":
+        if args.action == "show" or args.action is None:
+            _cli_show(cfg)
+
+        elif args.action == "set":
+            if args.key == "repo":
+                path = Path(args.value).expanduser().resolve() if args.value else None
+                if not path or not path.is_dir():
+                    print(f"エラー: ディレクトリが存在しません: {args.value}", file=sys.stderr)
+                    sys.exit(1)
+                cfg.repo_path = str(path)
+                cfg.save()
+                print(f"repo_path を設定しました: {cfg.repo_path}")
+
+            elif args.key == "subfolder":
+                cfg.subfolder = args.value or ""
+                cfg.save()
+                label = cfg.subfolder or "(ルート直下)"
+                print(f"subfolder を設定しました: {label}")
+
+            elif args.key == "password":
+                pw = args.value or getpass.getpass("新しいパスワード: ")
+                if not pw:
+                    print("エラー: パスワードが空です。", file=sys.stderr)
+                    sys.exit(1)
+                cfg.set_password(pw)
+                print("パスワードを更新しました。")
+        else:
+            cp.print_help()
+
+    else:
+        # 引数なし → GUI 起動
+        app = App()
+        app.mainloop()
+
+
 # ── エントリポイント ───────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    _cli(sys.argv[1:])
