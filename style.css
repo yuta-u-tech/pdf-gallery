@@ -1,14 +1,19 @@
-/* ── 富嶽三十六景 Palette ───────────────────────────── */
+/* ──────────────────────────────────────────────────────
+   浮世絵 / 富嶽三十六景 — Ukiyo-e Design System
+   青海波 seigaiha: CSS radial-gradient pattern
+   版画風フラットスタイル: sharp edges, offset shadow
+────────────────────────────────────────────────────── */
+
 :root {
-  --prussian:   #0D3060;
-  --wave-mid:   #1462A0;
-  --wave-light: #2278B8;
-  --washi:      #F2EBD9;
-  --washi-dark: #E6DCC4;
-  --ink:        #0D1A2E;
-  --vermillion: #C94040;
-  --vermillion-d: #8C2C2C;
-  --foam:       #EAE4D2;
+  --prussian:    #0D3060;   /* ベロ藍 — Prussian blue */
+  --indigo:      #1050A0;
+  --arc:         #4A90B8;   /* 青海波の弧 */
+  --washi:       #F2EBD9;   /* 和紙 */
+  --washi-dark:  #E4D8BE;
+  --ink:         #0D1A2E;
+  --vermillion:  #C94040;   /* 朱 */
+  --vermillion-d:#8C2C2C;
+  --foam:        #EAE4D2;   /* 波の白 */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,50 +28,94 @@ body {
   flex-direction: column;
 }
 
-/* ── Header ──────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   HEADER — 青海波パターン (seigaiha wave background)
+   radial-gradient で版画の波紋テクスチャを生成
+══════════════════════════════════════════════════════ */
 header {
   position: relative;
   overflow: hidden;
-  line-height: 0; /* SVG と本文の隙間を消す */
-}
-
-.wave-header {
-  display: block;
-  width: 100%;
-  height: auto;
-  min-height: 180px;
-}
-
-.header-content {
-  position: absolute;
-  top: 9%;
-  left: 50%;
-  transform: translateX(-50%);
+  padding: 3.8rem 1rem 100px;   /* bottom: wave SVG の高さ分確保 */
   text-align: center;
-  z-index: 2;
-  white-space: nowrap;
+
+  /* 青海波 seigaiha: two sets of concentric arcs forming fish-scale waves */
+  background-color: var(--prussian);
+  background-image:
+    radial-gradient(
+      circle at 100% 150%,
+      var(--prussian) 24%,
+      var(--arc)      25%, var(--arc) 28%,
+      var(--prussian) 29%, var(--prussian) 36%,
+      var(--arc)      36%, var(--arc) 40%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 0% 150%,
+      var(--prussian) 24%,
+      var(--arc)      25%, var(--arc) 28%,
+      var(--prussian) 29%, var(--prussian) 36%,
+      var(--arc)      36%, var(--arc) 40%,
+      transparent 40%
+    );
+  background-size: 75px 50px;
+  background-position: 0 0, 37.5px 0;
+}
+
+/* 上部を暗くして文字を読みやすく */
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 20, 48, 0.60) 0%,
+    rgba(6, 20, 48, 0.20) 55%,
+    transparent 100%
+  );
   pointer-events: none;
 }
 
+.header-inner {
+  position: relative;
+  z-index: 1;
+}
+
 #site-title {
-  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #0B2C56;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.8),
-    0 2px 10px rgba(200,225,240,0.5);
+  letter-spacing: 0.12em;
+  color: var(--foam);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* 水平線の飾り */
+.header-rule {
+  width: 100px;
+  height: 1px;
+  background: rgba(234, 228, 210, 0.50);
+  margin: 1.1rem auto;
 }
 
 #site-subtitle {
-  margin-top: 0.35rem;
   font-size: clamp(0.82rem, 1.8vw, 1rem);
-  letter-spacing: 0.38em;
-  color: #1A5080;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  letter-spacing: 0.44em;
+  color: var(--foam);
+  opacity: 0.80;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
 }
 
-/* ── Config Bar ──────────────────────────────────────── */
+/* 下部の波形 SVG — header を washi 色へなめらかに遷移 */
+.header-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════
+   CONFIG BAR
+══════════════════════════════════════════════════════ */
 .config-bar {
   background: var(--prussian);
   padding: 0.85rem 1.5rem;
@@ -82,15 +131,15 @@ header {
   font-family: 'Courier New', monospace;
   font-size: 0.85rem;
   padding: 0.45rem 0.85rem;
-  border: 1.5px solid var(--wave-mid);
+  border: 1.5px solid #2A6090;
   background: #091A2E;
   color: var(--foam);
   outline: none;
-  border-radius: 0; /* 版画: 直角 */
+  border-radius: 0;
   transition: border-color 0.2s;
 }
-.config-bar input:focus { border-color: var(--foam); }
-.config-bar input::placeholder { color: #5E82A0; }
+.config-bar input:focus       { border-color: var(--foam); }
+.config-bar input::placeholder { color: #4E7898; }
 
 #repo-input { width: 220px; }
 #path-input { width: 160px; }
@@ -110,7 +159,9 @@ header {
 .btn-load:hover  { background: var(--vermillion-d); }
 .btn-load:active { transform: scale(0.97); }
 
-/* ── Main ────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════════════ */
 main {
   flex: 1;
   max-width: 1100px;
@@ -119,37 +170,29 @@ main {
   padding: 2.5rem 1.5rem 3rem;
 }
 
-/* ── PDF Grid ────────────────────────────────────────── */
 .pdf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.8rem;
 }
 
-/* ── PDF Card — 版画額縁スタイル ─────────────────────── */
+/* ══════════════════════════════════════════════════════
+   PDF CARD — 版画の額縁スタイル
+   ・直角コーナー (border-radius: 0)
+   ・オフセットシャドウ (版木ズレ)
+   ・上端に青海波帯 + 朱色ライン
+══════════════════════════════════════════════════════ */
 .pdf-card {
   background: #FDFAF2;
   border: 2px solid var(--prussian);
   border-radius: 0;
-  padding: 1.4rem 1.2rem 1.1rem;
+  box-shadow: 5px 5px 0 var(--prussian);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  /* フラットオフセットシャドウ: 版木のズレのような効果 */
-  box-shadow: 5px 5px 0 var(--prussian);
-  transition: transform 0.18s, box-shadow 0.18s;
+  align-items: stretch;
+  overflow: hidden;
   animation: fadeUp 0.4s ease both;
-  position: relative;
-}
-
-/* 朱色の上端ライン */
-.pdf-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--vermillion);
+  transition: transform 0.18s, box-shadow 0.18s;
 }
 
 .pdf-card:hover {
@@ -157,7 +200,43 @@ main {
   box-shadow: 8px 8px 0 var(--prussian);
 }
 
-.card-icon svg { width: 50px; height: auto; }
+/* 青海波帯 (カード上端) */
+.card-band {
+  height: 36px;
+  flex-shrink: 0;
+  background-color: var(--prussian);
+  background-image:
+    radial-gradient(
+      circle at 100% 150%,
+      var(--prussian) 24%,
+      #4A90B8 25%, #4A90B8 28%,
+      var(--prussian) 29%, var(--prussian) 36%,
+      #4A90B8 36%, #4A90B8 40%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 0% 150%,
+      var(--prussian) 24%,
+      #4A90B8 25%, #4A90B8 28%,
+      var(--prussian) 29%, var(--prussian) 36%,
+      #4A90B8 36%, #4A90B8 40%,
+      transparent 40%
+    );
+  background-size: 18px 12px;
+  background-position: 0 0, 9px 0;
+  border-bottom: 3px solid var(--vermillion);
+}
+
+.card-body {
+  padding: 0.9rem 1.2rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.card-icon svg { width: 46px; height: auto; }
 
 .card-info { text-align: center; width: 100%; }
 
@@ -171,7 +250,7 @@ main {
 }
 
 .card-size {
-  font-size: 0.74rem;
+  font-size: 0.73rem;
   color: #7A7060;
   font-family: 'Courier New', monospace;
 }
@@ -186,23 +265,22 @@ main {
 .btn-view,
 .btn-download {
   flex: 1;
-  padding: 0.45rem 0;
+  padding: 0.48rem 0;
   border-radius: 0;
   font-family: inherit;
   font-size: 0.84rem;
   letter-spacing: 0.08em;
   text-align: center;
   cursor: pointer;
-  transition: background 0.18s, transform 0.1s;
   text-decoration: none;
   border: 2px solid var(--prussian);
+  transition: background 0.18s, transform 0.1s;
 }
-
 .btn-view {
   background: var(--prussian);
   color: var(--foam);
 }
-.btn-view:hover { background: #05213E; }
+.btn-view:hover { background: #051830; }
 
 .btn-download {
   background: transparent;
@@ -213,7 +291,9 @@ main {
 .btn-view:active,
 .btn-download:active { transform: scale(0.97); }
 
-/* ── Loading / Error ─────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   LOADING / ERROR
+══════════════════════════════════════════════════════ */
 .loading {
   text-align: center;
   padding: 3rem 0;
@@ -247,11 +327,13 @@ main {
 
 .hidden { display: none !important; }
 
-/* ── Modal ───────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════════ */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(6,18,36,0.82);
+  background: rgba(6, 18, 36, 0.84);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -283,6 +365,7 @@ main {
   color: var(--foam);
   gap: 0.8rem;
   border-bottom: 3px solid var(--vermillion);
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -303,8 +386,8 @@ main {
   line-height: 1;
   cursor: pointer;
   padding: 0.1rem 0.4rem;
-  transition: color 0.15s;
   flex-shrink: 0;
+  transition: color 0.15s;
 }
 .btn-close:hover { color: #FFCDD0; }
 
@@ -314,7 +397,9 @@ main {
   width: 100%;
 }
 
-/* ── Footer ──────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
 footer {
   background: var(--prussian);
   border-top: 3px solid var(--vermillion);
@@ -326,7 +411,9 @@ footer {
   opacity: 0.92;
 }
 
-/* ── Animations ──────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════════════ */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -339,16 +426,13 @@ footer {
   to { transform: rotate(360deg); }
 }
 
-/* ── Responsive ──────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
   .config-bar { gap: 0.5rem; }
   #repo-input  { width: 100%; }
   #path-input  { width: 100%; }
   .btn-load    { width: 100%; }
   .modal-box   { height: 92vh; }
-  .header-content {
-    white-space: normal;
-    padding: 0.5rem 1rem;
-    width: 90%;
-  }
 }

@@ -82,24 +82,27 @@ function buildCard(file, index) {
   card.style.animationDelay = `${index * 60}ms`
 
   card.innerHTML = `
-    <div class="card-icon">
-      <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5 0 L30 0 L40 10 L40 50 L5 50 Z" fill="#f4efe3" stroke="#1a4f8a" stroke-width="1.5"/>
-        <path d="M30 0 L30 10 L40 10" fill="none" stroke="#1a4f8a" stroke-width="1.5"/>
-        <text x="12" y="34" font-family="serif" font-size="11" fill="#c94040" font-weight="bold">PDF</text>
-      </svg>
-    </div>
-    <div class="card-info">
-      <p class="card-name">${escapeHtml(file.name)}</p>
-      <p class="card-size">${sizeKB} KB</p>
-    </div>
-    <div class="card-actions">
-      <button class="btn-view" onclick="viewPDF('${escapeHtml(downloadUrl)}', '${escapeHtml(file.name)}')">
-        閲覧
-      </button>
-      <a class="btn-download" href="${escapeHtml(downloadUrl)}" download="${escapeHtml(file.name)}" target="_blank">
-        保存
-      </a>
+    <div class="card-band"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 0 L30 0 L40 10 L40 50 L5 50 Z" fill="#FDFAF2" stroke="#0D3060" stroke-width="2"/>
+          <path d="M30 0 L30 10 L40 10" fill="none" stroke="#0D3060" stroke-width="2"/>
+          <text x="12" y="34" font-family="serif" font-size="11" fill="#C94040" font-weight="bold">PDF</text>
+        </svg>
+      </div>
+      <div class="card-info">
+        <p class="card-name">${escapeHtml(file.name)}</p>
+        <p class="card-size">${sizeKB} KB</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn-view" onclick="viewPDF('${escapeHtml(downloadUrl)}', '${escapeHtml(file.name)}')">
+          閲覧
+        </button>
+        <a class="btn-download" href="${escapeHtml(downloadUrl)}" download="${escapeHtml(file.name)}" target="_blank">
+          保存
+        </a>
+      </div>
     </div>
   `
   return card
