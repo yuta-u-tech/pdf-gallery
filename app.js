@@ -1,18 +1,18 @@
 let currentOwner = CONFIG.owner
-let currentRepo = CONFIG.repo
-let currentPath = CONFIG.path
+let currentRepo  = CONFIG.repo
+let navStack     = []   // [{name, path}]
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('repo-input').value = `${CONFIG.owner}/${CONFIG.repo}`
-  document.getElementById('path-input').value = CONFIG.path
-  document.getElementById('site-title').textContent = CONFIG.siteTitle
+  document.getElementById('repo-input').value          = `${CONFIG.owner}/${CONFIG.repo}`
+  document.getElementById('path-input').value          = CONFIG.path
+  document.getElementById('site-title').textContent    = CONFIG.siteTitle
   document.getElementById('site-subtitle').textContent = CONFIG.siteSubtitle
   document.title = CONFIG.siteTitle
 
-  if (CONFIG.owner !== 'OWNER') {
-    loadPDFs()
-  }
+  if (CONFIG.owner !== 'OWNER') loadPDFs()
 })
+
+// ── ロード ────────────────────────────────────────────────────────────────────
 
 async function loadPDFs() {
   const repoVal = document.getElementById('repo-input').value.trim()
@@ -25,14 +25,15 @@ async function loadPDFs() {
 
   const [owner, repo] = repoVal.split('/')
   currentOwner = owner
-  currentRepo = repo
-  currentPath = pathVal
+  currentRepo  = repo
 
-  await fetchContents(owner, repo, pathVal)
+  navStack = [{ name: 'ホーム', path: pathVal }]
+  renderBreadcrumb()
+  await fetchContents(pathVal)
 }
 
-async function fetchContents(owner, repo, path) {
-  const grid = document.getElementById('pdf-grid')
+async function fetchContents(path) {
+  const grid    = document.getElementById('pdf-grid')
   const loading = document.getElementById('loading')
   const errorEl = document.getElementById('error')
 
@@ -40,10 +41,10 @@ async function fetchContents(owner, repo, path) {
   errorEl.classList.add('hidden')
   loading.classList.remove('hidden')
 
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+  const apiUrl = `https://api.github.com/repos/${currentOwner}/${currentRepo}/contents/${path}`
 
   try {
-    const res = await fetch(url)
+    const res = await fetch(apiUrl)
     if (!res.ok) {
       const msg = res.status === 404
         ? 'リポジトリまたはパスが見つかりません。'
@@ -52,33 +53,95 @@ async function fetchContents(owner, repo, path) {
     }
 
     const items = await res.json()
-    const pdfs = Array.isArray(items)
-      ? items.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.pdf'))
-      : []
+    if (!Array.isArray(items)) throw new Error('予期しないレスポンスです。')
+
+    const dirs = items.filter(f => f.type === 'dir')
+    const pdfs = items.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.pdf'))
 
     loading.classList.add('hidden')
 
-    if (pdfs.length === 0) {
-      showError('PDFファイルが見つかりませんでした。')
+    if (dirs.length === 0 && pdfs.length === 0) {
+      showError('PDFファイルもフォルダも見つかりませんでした。')
       return
     }
 
-    pdfs.forEach((file, i) => {
-      const card = buildCard(file, i)
-      grid.appendChild(card)
-    })
+    dirs.forEach((dir, i) => grid.appendChild(buildFolderCard(dir, i)))
+    pdfs.forEach((file, i) => grid.appendChild(buildPdfCard(file, dirs.length + i)))
+
   } catch (err) {
     loading.classList.add('hidden')
     showError(err.message)
   }
 }
 
-function buildCard(file, index) {
-  const sizeKB = (file.size / 1024).toFixed(1)
+// ── ナビゲーション ────────────────────────────────────────────────────────────
+
+function renderBreadcrumb() {
+  const bc = document.getElementById('breadcrumb')
+  if (!bc) return
+
+  if (navStack.length <= 1) {
+    bc.innerHTML = ''
+    bc.style.display = 'none'
+    return
+  }
+
+  bc.style.display = 'flex'
+  bc.innerHTML = navStack.map((item, i) => {
+    const label = escapeHtml(item.name || 'ホーム')
+    if (i === navStack.length - 1) {
+      return `<span class="bc-current">${label}</span>`
+    }
+    return `<button class="bc-link" onclick="navTo(${i})">${label}</button>`
+  }).join('<span class="bc-sep">›</span>')
+}
+
+function navTo(index) {
+  navStack = navStack.slice(0, index + 1)
+  renderBreadcrumb()
+  fetchContents(navStack[navStack.length - 1].path)
+}
+
+function openFolder(name, path) {
+  navStack.push({ name, path })
+  renderBreadcrumb()
+  fetchContents(path)
+}
+
+// ── カード構築 ────────────────────────────────────────────────────────────────
+
+function buildFolderCard(dir, index) {
+  const card = document.createElement('div')
+  card.className = 'pdf-card folder-card'
+  card.style.animationDelay = `${index * 60}ms`
+  card.addEventListener('click', () => openFolder(dir.name, dir.path))
+
+  card.innerHTML = `
+    <div class="card-band folder-band"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 10 L2 42 L50 42 L50 16 L24 16 L19 10 Z"
+                fill="#F2EBD9" stroke="#0D3060" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M2 16 L50 16" stroke="#0D3060" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="card-info">
+        <p class="card-name">${escapeHtml(dir.name)}</p>
+        <p class="card-size">フォルダ</p>
+      </div>
+      <div class="card-actions">
+        <button class="btn-view btn-open">開く　›</button>
+      </div>
+    </div>
+  `
+  return card
+}
+
+function buildPdfCard(file, index) {
+  const sizeKB      = (file.size / 1024).toFixed(1)
   const downloadUrl = file.download_url
-  // raw.githubusercontent.com は iframe 埋め込み不可のため
-  // 同リポジトリなら GitHub Pages URL でプレビューする
-  const viewUrl = `https://${currentOwner}.github.io/${currentRepo}/${file.path}`
+  const viewUrl     = `https://${currentOwner}.github.io/${currentRepo}/${file.path}`
 
   const card = document.createElement('div')
   card.className = 'pdf-card'
@@ -99,10 +162,12 @@ function buildCard(file, index) {
         <p class="card-size">${sizeKB} KB</p>
       </div>
       <div class="card-actions">
-        <button class="btn-view" onclick="viewPDF('${escapeHtml(viewUrl)}', '${escapeHtml(file.name)}')">
+        <button class="btn-view"
+                onclick="viewPDF('${escapeHtml(viewUrl)}', '${escapeHtml(file.name)}')">
           閲覧
         </button>
-        <a class="btn-download" href="${escapeHtml(downloadUrl)}" download="${escapeHtml(file.name)}" target="_blank">
+        <a class="btn-download" href="${escapeHtml(downloadUrl)}"
+           download="${escapeHtml(file.name)}" target="_blank">
           保存
         </a>
       </div>
@@ -111,31 +176,29 @@ function buildCard(file, index) {
   return card
 }
 
+// ── モーダル ──────────────────────────────────────────────────────────────────
+
 function viewPDF(url, name) {
-  const modal = document.getElementById('modal')
   document.getElementById('modal-title').textContent = name
-  const viewer = document.getElementById('pdf-viewer')
-  viewer.src = url
+  document.getElementById('pdf-viewer').src = url
+  const modal = document.getElementById('modal')
   modal.classList.remove('hidden')
-  modal.classList.add('visible')
   document.body.style.overflow = 'hidden'
 }
 
 function closeModal() {
-  const modal = document.getElementById('modal')
-  modal.classList.remove('visible')
-  modal.classList.add('hidden')
+  document.getElementById('modal').classList.add('hidden')
   document.getElementById('pdf-viewer').src = ''
   document.body.style.overflow = ''
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal()
-})
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
 
 function handleModalClick(e) {
   if (e.target.id === 'modal') closeModal()
 }
+
+// ── ユーティリティ ────────────────────────────────────────────────────────────
 
 function showError(msg) {
   const el = document.getElementById('error')

@@ -8,8 +8,83 @@
 </head>
 <body>
 
-  <!-- ── Header: 青海波 (seigaiha) pattern background ── -->
+  <!-- ── Header: Hokusai-inspired woodblock seascape ── -->
   <header>
+    <svg class="hokusai-scene" viewBox="0 0 1440 520"
+         preserveAspectRatio="xMidYMid slice" aria-hidden="true"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="paper-grain" width="72" height="72" patternUnits="userSpaceOnUse">
+          <path d="M9 12h19M41 7h13M22 36h28M4 58h16M58 48h9" stroke="#2D5F94" stroke-width="1" opacity="0.16"/>
+          <path d="M14 24h5M36 51h10M61 18h3" stroke="#F8F0DC" stroke-width="1" opacity="0.34"/>
+        </pattern>
+        <linearGradient id="sky-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F6E7C4"/>
+          <stop offset="0.62" stop-color="#D9B36A"/>
+          <stop offset="1" stop-color="#B86D40"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="1440" height="520" fill="#0D3060"/>
+      <rect width="1440" height="310" fill="url(#sky-fade)"/>
+      <rect width="1440" height="520" fill="url(#paper-grain)"/>
+
+      <g class="sun-disc">
+        <circle cx="1118" cy="118" r="68" fill="#D1503D"/>
+        <circle cx="1118" cy="118" r="54" fill="#E8B966" opacity="0.52"/>
+      </g>
+
+      <g class="fuji">
+        <path d="M700 306c64-5 116-27 159-67 31-28 58-82 79-132h42c22 50 50 104 84 133 45 38 96 60 155 66z"
+              fill="#F3E5C4" stroke="#0D3060" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M980 107c22 50 50 104 84 133 45 38 96 60 155 66H957c-4-69 3-135 23-199z"
+              fill="#D8C4A0" opacity="0.74"/>
+        <path d="M859 240c36 13 70 7 101-18 31 24 68 28 110 13 25 27 58 51 99 71H747c45-18 82-40 112-66z"
+              fill="#0D3060" opacity="0.96"/>
+        <path d="M824 107h157" stroke="#0D3060" stroke-width="7" stroke-linecap="round"/>
+        <path d="M738 306c120-12 278-12 423 0" stroke="#0D3060" stroke-width="9" stroke-linecap="round"/>
+      </g>
+
+      <g class="sea-lines" fill="none" stroke-linecap="round">
+        <path d="M-60 332c160-44 301-44 423 0s264 44 424 0 301-44 423 0 264 44 424 0"
+              stroke="#0D3060" stroke-width="13"/>
+        <path d="M-60 332c160-44 301-44 423 0s264 44 424 0 301-44 423 0 264 44 424 0"
+              stroke="#6FA7C9" stroke-width="5" opacity="0.72"/>
+        <path d="M-70 388c170-36 316-36 438 0s268 36 438 0 316-36 438 0 268 36 438 0"
+              stroke="#0D3060" stroke-width="12"/>
+        <path d="M-70 388c170-36 316-36 438 0s268 36 438 0 316-36 438 0 268 36 438 0"
+              stroke="#6FA7C9" stroke-width="5" opacity="0.72"/>
+      </g>
+
+      <g class="great-wave">
+        <path d="M-90 520V352c92-33 176-28 252 15 64 36 122 47 175 31 47-14 82-46 105-96 28-62 78-101 150-116 62 41 94 95 97 162 2 60 34 116 96 172z"
+              fill="#0A2D5A"/>
+        <path d="M-90 520V385c82-28 159-20 230 23 76 46 148 58 216 36 63-21 108-67 134-139 19-53 55-87 108-101 36 32 58 72 65 121 8 59 42 123 104 195z"
+              fill="#145B9A"/>
+        <path d="M610 189c-2 58-20 107-55 148-17 20-38 37-63 52 48-10 92-8 132 8-89 48-210 65-338 44-90-15-174-43-250-82 128 23 235 1 321-65 39-30 67-63 84-100 42-13 98-15 169-5z"
+              fill="#F2EBD9"/>
+        <path d="M535 238c-15 44-43 79-84 105-15 10-34 18-55 25 34-3 65 1 93 13-80 24-182 13-306-34 92 3 168-20 227-70 39-33 81-46 125-39z"
+              fill="#0D3060"/>
+        <path d="M572 202c-18 60-54 109-108 146-23 16-47 28-73 37 45-4 85 0 121 13-103 19-220 14-351-14"
+              fill="none" stroke="#0D3060" stroke-width="10" stroke-linecap="round"/>
+        <path d="M645 351c124-30 245-22 361 24 116 46 262 38 438-24v169H615c80-46 90-105 30-169z"
+              fill="#0A2D5A"/>
+        <path d="M690 390c105-25 211-17 319 24 102 39 224 35 366-13v119H620c77-34 100-77 70-130z"
+              fill="#145B9A"/>
+        <path d="M664 369c148-37 292-17 431 59 66 36 158 31 276-15"
+              fill="none" stroke="#F2EBD9" stroke-width="18" stroke-linecap="round" opacity="0.9"/>
+        <path d="M738 411c116-25 231-14 346 32 76 31 162 22 258-25"
+              fill="none" stroke="#0D3060" stroke-width="9" stroke-linecap="round" opacity="0.88"/>
+        <path d="M-80 462c164-51 317-45 460 18 76 34 154 42 235 24"
+              fill="none" stroke="#F2EBD9" stroke-width="17" stroke-linecap="round" opacity="0.82"/>
+      </g>
+
+      <g class="cartouche" transform="translate(101 76)">
+        <rect width="74" height="168" fill="#D1503D" stroke="#0D3060" stroke-width="5"/>
+        <path d="M21 24v118M38 23v118M55 26v112" stroke="#F7EAD0" stroke-width="3" stroke-linecap="round"/>
+        <path d="M18 45h39M18 78h39M18 111h39" stroke="#F7EAD0" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </svg>
     <div class="header-inner">
       <h1 id="site-title">PDF Gallery</h1>
       <div class="header-rule"></div>
@@ -39,6 +114,7 @@
 
   <!-- ── PDF Grid ── -->
   <main>
+    <nav id="breadcrumb" class="breadcrumb" style="display:none"></nav>
     <div id="loading" class="loading hidden">読み込み中</div>
     <div id="error"   class="error   hidden"></div>
     <div id="pdf-grid" class="pdf-grid"></div>
