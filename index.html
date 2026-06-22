@@ -8,62 +8,141 @@
 </head>
 <body>
 
-  <!-- ── Header ── -->
+  <!-- ── Header: 神奈川沖浪裏 inspired ── -->
   <header>
-    <div class="header-inner">
+    <svg class="wave-header" viewBox="0 0 1440 300"
+         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#EAF4FA"/>
+          <stop offset="28%"  stop-color="#A8D2E8"/>
+          <stop offset="60%"  stop-color="#4E9EC8"/>
+          <stop offset="100%" stop-color="#1462A0"/>
+        </linearGradient>
+        <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#1462A0"/>
+          <stop offset="100%" stop-color="#061830"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="1440" height="300" fill="url(#skyGrad)"/>
+
+      <!-- ── 富士山 (背景右寄り) ── -->
+      <path d="M836,230 L916,150 L996,230" fill="#7AABBE" opacity="0.62"/>
+      <!-- 雪冠 -->
+      <path d="M901,150 L916,133 L931,150 L924,154 L908,154 Z"
+            fill="#EAE4D2" opacity="0.92"/>
+      <!-- 雪線 -->
+      <path d="M894,167 L916,154 L938,167 C930,174 922,177 916,177
+               C910,177 902,174 894,167 Z"
+            fill="#EAE4D2" opacity="0.38"/>
+
+      <!-- ── 遠景の小波 ── -->
+      <path d="M680,220 C716,210 752,220 786,213 C818,207 848,215 878,210
+               C914,204 950,211 990,207 C1038,201 1092,208 1152,204
+               C1214,200 1294,206 1374,202 C1408,200 1428,202 1440,201
+               L1440,238 L680,238 Z"
+            fill="#1860A0" opacity="0.46"/>
+
+      <!-- ── 大波 本体 ── -->
+      <path d="M0,274
+               C24,258 50,241 76,223 C98,209 119,194 141,180
+               C159,168 176,156 193,144 C208,134 221,125 233,116
+               C245,107 256,100 267,94 C278,89 289,85 301,85
+               C314,86 329,91 349,99 C372,110 401,125 440,142
+               C481,160 528,178 584,194 C642,210 707,222 778,230
+               C850,238 924,242 998,245 C1066,247 1132,248 1198,249
+               C1270,250 1358,250 1440,250
+               L1440,300 L0,300 Z"
+            fill="url(#waveGrad)"/>
+
+      <!-- 波面のハイライト (浅い水色ライン) -->
+      <path d="M154,178 C172,165 188,153 204,142 C219,132 232,123 244,116
+               C256,109 267,104 277,101 C287,98 296,98 303,101
+               C315,106 331,114 354,125 L338,138
+               C315,126 296,118 279,112 C265,107 252,107 241,113
+               C229,119 218,129 204,141 C190,153 174,164 158,176 Z"
+            fill="#2278B8" opacity="0.72"/>
+
+      <!-- ── 泡の「かぎ爪」指 ── -->
+      <!-- 指 1 -->
+      <path d="M192,143 C200,123 216,111 234,116 C224,127 210,136 196,146 Z"
+            fill="#EAE4D2"/>
+      <path d="M198,139 C205,121 219,110 235,114 C226,123 212,133 200,142 Z"
+            fill="#2278B8" opacity="0.42"/>
+      <!-- 指 2 -->
+      <path d="M216,129 C227,107 246,94 266,100 C254,113 236,123 220,133 Z"
+            fill="#EAE4D2"/>
+      <path d="M223,124 C234,103 252,91 271,97 C258,110 240,120 226,130 Z"
+            fill="#2278B8" opacity="0.40"/>
+      <!-- 指 3 -->
+      <path d="M244,115 C257,91 280,77 302,84 C288,98 266,110 248,121 Z"
+            fill="#EAE4D2"/>
+      <path d="M252,110 C265,87 287,74 308,81 C293,94 270,107 255,117 Z"
+            fill="#2278B8" opacity="0.38"/>
+      <!-- 指 4 -->
+      <path d="M274,101 C290,75 317,60 342,68 C326,83 300,97 278,109 Z"
+            fill="#EAE4D2"/>
+      <path d="M283,96 C299,71 325,56 349,64 C332,79 305,93 286,104 Z"
+            fill="#2278B8" opacity="0.36"/>
+      <!-- 指 5 (最高・中心) -->
+      <path d="M307,87 C326,58 358,43 386,52 C368,68 338,83 311,96 Z"
+            fill="#EAE4D2"/>
+      <path d="M317,81 C336,53 367,39 393,48 C374,64 343,79 320,92 Z"
+            fill="#2278B8" opacity="0.34"/>
+      <!-- 指 6 -->
+      <path d="M343,74 C365,44 400,29 431,39 C411,56 377,72 347,85 Z"
+            fill="#EAE4D2"/>
+      <path d="M354,68 C376,39 410,25 439,35 C418,52 383,68 357,81 Z"
+            fill="#2278B8" opacity="0.32"/>
+
+      <!-- 飛沫 -->
+      <circle cx="402" cy="32" r="4"   fill="#EAE4D2" opacity="0.86"/>
+      <circle cx="422" cy="23" r="2.5" fill="#EAE4D2" opacity="0.78"/>
+      <circle cx="440" cy="29" r="3"   fill="#EAE4D2" opacity="0.82"/>
+      <circle cx="457" cy="18" r="2"   fill="#EAE4D2" opacity="0.68"/>
+      <circle cx="470" cy="26" r="2.5" fill="#EAE4D2" opacity="0.73"/>
+      <circle cx="482" cy="14" r="2"   fill="#EAE4D2" opacity="0.61"/>
+      <circle cx="382" cy="44" r="2.5" fill="#EAE4D2" opacity="0.70"/>
+      <circle cx="366" cy="56" r="2"   fill="#EAE4D2" opacity="0.58"/>
+
+      <!-- ── 副波 (右側の小さな波) ── -->
+      <path d="M574,206 C610,194 642,206 672,200 C694,194 710,187 722,181
+               C732,176 742,174 751,176 C763,180 779,188 801,197
+               C828,208 864,217 910,223 L910,254 L574,254 Z"
+            fill="#104E9C" opacity="0.80"/>
+      <!-- 副波の泡 -->
+      <path d="M705,186 C714,171 729,163 743,167 C734,175 720,182 707,189 Z"
+            fill="#EAE4D2" opacity="0.84"/>
+      <path d="M723,179 C733,164 749,156 764,161 C754,169 739,176 725,183 Z"
+            fill="#EAE4D2" opacity="0.79"/>
+
+      <!-- ── 前景の海面 ── -->
+      <path d="M0,265 C120,255 240,267 360,259 C480,251 600,263 720,257
+               C840,251 960,263 1080,257 C1182,252 1302,261 1440,256
+               L1440,284 L0,284 Z"
+            fill="#0C3E80" opacity="0.50"/>
+
+      <!-- ページ背景へのグラデーション移行 -->
+      <path d="M0,289 C240,281 480,291 720,285 C960,279 1200,288 1440,283
+               L1440,300 L0,300 Z"
+            fill="#F2EBD9"/>
+    </svg>
+
+    <!-- タイトル (空の部分に重ねる) -->
+    <div class="header-content">
       <h1 id="site-title">PDF Gallery</h1>
       <p id="site-subtitle">資料一覧</p>
     </div>
-
-    <!-- Great Wave silhouette -->
-    <svg class="wave-svg" viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <!-- back wave -->
-      <path d="M0,90
-        C80,55 120,95 200,72
-        C280,48 320,88 400,70
-        C480,52 520,85 600,65
-        C680,45 720,80 800,60
-        C880,40 920,78 1000,58
-        C1080,38 1120,75 1200,55
-        C1280,35 1360,70 1440,50
-        L1440,120 L0,120 Z"
-        fill="#0a2748" opacity="0.6"/>
-      <!-- mid wave (Great Wave crest) -->
-      <path d="M0,100
-        C60,68 90,108 160,82
-        C200,68 210,50 240,42
-        C255,38 264,44 270,52
-        C278,62 274,78 280,86
-        C300,100 340,92 380,88
-        C440,80 500,100 560,90
-        C620,80 680,100 740,90
-        C800,80 860,100 920,90
-        C980,80 1040,100 1100,90
-        C1160,80 1220,100 1280,90
-        C1340,80 1400,96 1440,92
-        L1440,120 L0,120 Z"
-        fill="#0d3d6e" opacity="0.85"/>
-      <!-- foam flicks on crest -->
-      <path d="M220,50 C226,36 238,32 248,38 C256,43 252,54 244,58"
-        fill="none" stroke="#d9ecf7" stroke-width="2" stroke-linecap="round"/>
-      <path d="M232,46 C240,30 256,26 268,34"
-        fill="none" stroke="#d9ecf7" stroke-width="1.5" stroke-linecap="round"/>
-      <!-- front wave -->
-      <path d="M0,110
-        C120,96 200,116 300,106
-        C400,96 500,116 600,106
-        C700,96 800,116 900,106
-        C1000,96 1100,116 1200,106
-        C1300,96 1380,112 1440,108
-        L1440,120 L0,120 Z"
-        fill="#f4efe3"/>
-    </svg>
   </header>
 
   <!-- ── Config Bar ── -->
   <div class="config-bar">
-    <input id="repo-input"  type="text" placeholder="owner/repository" autocomplete="off" spellcheck="false">
-    <input id="path-input"  type="text" placeholder="フォルダパス（任意）" autocomplete="off" spellcheck="false">
+    <input id="repo-input" type="text" placeholder="owner/repository"
+           autocomplete="off" spellcheck="false">
+    <input id="path-input" type="text" placeholder="フォルダパス（任意）"
+           autocomplete="off" spellcheck="false">
     <button class="btn-load" onclick="loadPDFs()">読み込む</button>
   </div>
 
@@ -74,13 +153,9 @@
     <div id="pdf-grid" class="pdf-grid"></div>
   </main>
 
-  <!-- ── Footer Wave ── -->
-  <svg class="wave-footer-svg" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-    <path d="M0,30 C240,58 480,10 720,30 C960,50 1200,8 1440,30 L1440,0 L0,0 Z"
-      fill="#f4efe3"/>
-  </svg>
+  <!-- ── Footer ── -->
   <footer>
-    <p>Powered by GitHub API &nbsp;·&nbsp; Inspired by 葛飾北斎</p>
+    <p>PDF Gallery &nbsp;·&nbsp; Powered by GitHub API</p>
   </footer>
 
   <!-- ── PDF Modal ── -->
