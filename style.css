@@ -1,0 +1,367 @@
+/* ── Hokusai Palette ─────────────────────────────────── */
+:root {
+  --prussian:  #0d3d6e;
+  --deep-wave: #0a2748;
+  --mid-wave:  #1a6ea8;
+  --foam:      #d9ecf7;
+  --paper:     #f4efe3;
+  --ink:       #1c1209;
+  --vermillion:#c94040;
+  --vermillion-dark: #922e2e;
+  --shadow:    rgba(13,61,110,0.18);
+}
+
+/* ── Reset & Base ────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+header {
+  position: relative;
+  background: linear-gradient(170deg, var(--deep-wave) 0%, var(--prussian) 60%, var(--mid-wave) 100%);
+  color: var(--foam);
+  padding: 3rem 1.5rem 5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='38' stroke='%23ffffff08' stroke-width='1' fill='none'/%3E%3Ccircle cx='40' cy='40' r='28' stroke='%23ffffff05' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+.header-inner { position: relative; z-index: 1; }
+
+#site-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  color: #f0eadc;
+}
+
+#site-subtitle {
+  margin-top: 0.4rem;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  letter-spacing: 0.3em;
+  color: var(--foam);
+  opacity: 0.85;
+}
+
+/* Great Wave SVG decoration */
+.wave-svg {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Config Bar ──────────────────────────────────────── */
+.config-bar {
+  background: var(--deep-wave);
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-bottom: 3px solid var(--vermillion);
+}
+
+.config-bar input {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.85rem;
+  border: 1.5px solid var(--mid-wave);
+  border-radius: 4px;
+  background: #0a1f38;
+  color: var(--foam);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.config-bar input:focus { border-color: var(--foam); }
+
+.config-bar input::placeholder { color: #6a8fac; }
+
+#repo-input { width: 220px; }
+#path-input { width: 160px; }
+
+.btn-load {
+  padding: 0.45rem 1.4rem;
+  background: var(--vermillion);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-load:hover  { background: var(--vermillion-dark); }
+.btn-load:active { transform: scale(0.97); }
+
+/* ── Main Content ────────────────────────────────────── */
+main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+/* ── PDF Grid ────────────────────────────────────────── */
+.pdf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.4rem;
+}
+
+/* ── PDF Card ────────────────────────────────────────── */
+.pdf-card {
+  background: #fff;
+  border: 1.5px solid #ddd8cc;
+  border-radius: 6px;
+  padding: 1.4rem 1.2rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 2px 10px var(--shadow);
+  transition: transform 0.22s, box-shadow 0.22s;
+  animation: fadeUp 0.4s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(to bottom, var(--prussian), var(--mid-wave));
+  border-radius: 6px 0 0 6px;
+}
+
+.pdf-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.card-icon svg { width: 52px; height: auto; }
+
+.card-info { text-align: center; width: 100%; }
+
+.card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--prussian);
+  word-break: break-all;
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+
+.card-size {
+  font-size: 0.75rem;
+  color: #888;
+  font-family: 'Courier New', monospace;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+.btn-view, .btn-download {
+  flex: 1;
+  padding: 0.45rem 0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-view {
+  background: var(--prussian);
+  color: #f0eadc;
+}
+.btn-view:hover { background: var(--deep-wave); }
+
+.btn-download {
+  background: transparent;
+  color: var(--prussian);
+  border: 1.5px solid var(--prussian);
+}
+.btn-download:hover { background: var(--foam); }
+
+.btn-view:active, .btn-download:active { transform: scale(0.97); }
+
+/* ── Loading / Error ─────────────────────────────────── */
+.loading {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--prussian);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+}
+
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2px solid var(--prussian);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: var(--vermillion);
+  font-size: 0.95rem;
+  background: #fff5f5;
+  border: 1px solid #f5c6c6;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.hidden { display: none !important; }
+
+/* ── Modal ───────────────────────────────────────────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,23,40,0.78);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(3px);
+  animation: fadein 0.2s ease;
+}
+
+.modal-box {
+  background: var(--paper);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 860px;
+  height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.2rem;
+  background: var(--prussian);
+  color: var(--foam);
+  gap: 0.8rem;
+}
+
+.modal-header h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  flex: 1;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: var(--foam);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.btn-close:hover { background: rgba(255,255,255,0.15); }
+
+#pdf-viewer {
+  flex: 1;
+  border: none;
+  width: 100%;
+}
+
+/* ── Footer ──────────────────────────────────────────── */
+footer {
+  position: relative;
+  background: var(--deep-wave);
+  color: var(--foam);
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  opacity: 0.9;
+  overflow: hidden;
+}
+
+.wave-footer-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: -1px;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  .config-bar { gap: 0.5rem; }
+  #repo-input  { width: 100%; }
+  #path-input  { width: 100%; }
+  .btn-load    { width: 100%; }
+  .modal-box   { height: 92vh; }
+}
