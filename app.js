@@ -61,10 +61,12 @@ async function fetchContents(path) {
     loading.classList.add('hidden')
 
     if (dirs.length === 0 && pdfs.length === 0) {
+      updateItemCount(0)
       showError('PDFファイルもフォルダも見つかりませんでした。')
       return
     }
 
+    updateItemCount(dirs.length + pdfs.length)
     dirs.forEach((dir, i) => grid.appendChild(buildFolderCard(dir, i)))
     pdfs.forEach((file, i) => grid.appendChild(buildPdfCard(file, dirs.length + i)))
 
@@ -111,27 +113,18 @@ function openFolder(name, path) {
 // ── カード構築 ────────────────────────────────────────────────────────────────
 
 function buildFolderCard(dir, index) {
-  const card = document.createElement('div')
+  const card = document.createElement('article')
   card.className = 'pdf-card folder-card'
   card.style.animationDelay = `${index * 60}ms`
   card.addEventListener('click', () => openFolder(dir.name, dir.path))
 
   card.innerHTML = `
-    <div class="card-band folder-band"></div>
+    <span class="print-no" aria-hidden="true">其の${kanjiNumber(index + 1)}</span>
     <div class="card-body">
-      <div class="card-icon">
-        <svg viewBox="0 0 52 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 10 L2 42 L50 42 L50 16 L24 16 L19 10 Z"
-                fill="#F2EBD9" stroke="#0D3060" stroke-width="2" stroke-linejoin="round"/>
-          <path d="M2 16 L50 16" stroke="#0D3060" stroke-width="2"/>
-        </svg>
-      </div>
-      <div class="card-info">
-        <p class="card-name">${escapeHtml(dir.name)}</p>
-        <p class="card-size">フォルダ</p>
-      </div>
+      <p class="card-kind">フォルダ</p>
+      <h3 class="card-name">${escapeHtml(dir.name)}</h3>
       <div class="card-actions">
-        <button class="btn-view btn-open">開く　›</button>
+        <button class="btn-open">開く　›</button>
       </div>
     </div>
   `
@@ -143,24 +136,15 @@ function buildPdfCard(file, index) {
   const downloadUrl = file.download_url
   const viewUrl     = `https://${currentOwner}.github.io/${currentRepo}/${file.path}`
 
-  const card = document.createElement('div')
+  const card = document.createElement('article')
   card.className = 'pdf-card'
   card.style.animationDelay = `${index * 60}ms`
 
   card.innerHTML = `
-    <div class="card-band"></div>
+    <span class="print-no" aria-hidden="true">其の${kanjiNumber(index + 1)}</span>
     <div class="card-body">
-      <div class="card-icon">
-        <svg viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M5 0 L30 0 L40 10 L40 50 L5 50 Z" fill="#FDFAF2" stroke="#0D3060" stroke-width="2"/>
-          <path d="M30 0 L30 10 L40 10" fill="none" stroke="#0D3060" stroke-width="2"/>
-          <text x="12" y="34" font-family="serif" font-size="11" fill="#C94040" font-weight="bold">PDF</text>
-        </svg>
-      </div>
-      <div class="card-info">
-        <p class="card-name">${escapeHtml(file.name)}</p>
-        <p class="card-size">${sizeKB} KB</p>
-      </div>
+      <p class="card-kind">PDF · ${sizeKB} KB</p>
+      <h3 class="card-name">${escapeHtml(file.name)}</h3>
       <div class="card-actions">
         <button class="btn-view"
                 onclick="viewPDF('${escapeHtml(viewUrl)}', '${escapeHtml(file.name)}')">
@@ -204,6 +188,22 @@ function showError(msg) {
   const el = document.getElementById('error')
   el.textContent = msg
   el.classList.remove('hidden')
+}
+
+function updateItemCount(n) {
+  const el = document.getElementById('item-count')
+  if (!el) return
+  el.textContent = n > 0 ? `全${kanjiNumber(n)}点` : ''
+}
+
+// 1 → 一, 12 → 十二, 36 → 三十六 (連作版画の番号)
+function kanjiNumber(n) {
+  if (n < 1 || n > 99) return String(n)
+  const digits = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九']
+  const tens = Math.floor(n / 10)
+  const ones = n % 10
+  const tensPart = tens === 0 ? '' : (tens === 1 ? '十' : digits[tens] + '十')
+  return tensPart + digits[ones]
 }
 
 function escapeHtml(str) {

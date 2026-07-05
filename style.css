@@ -1,25 +1,31 @@
 /* ──────────────────────────────────────────────────────
-   浮世絵 / 富嶽三十六景 — Ukiyo-e Design System
-   版画風フラットスタイル: sharp edges, offset shadow
+   浮世絵 / 富嶽三十六景 — Ukiyo-e Design System v2
+   手描きの波をやめ、確実に美しい版画要素で構成する:
+   天ぼかし・青海波文様・題簽(縦書き)・其の一 連番札
 ────────────────────────────────────────────────────── */
 
 :root {
   --prussian:    #0D3060;   /* ベロ藍 — Prussian blue */
-  --indigo:      #1050A0;
-  --arc:         #4A90B8;   /* 青海波の弧 */
-  --washi:       #F2EBD9;   /* 和紙 */
-  --washi-dark:  #E4D8BE;
-  --ink:         #0D1A2E;
+  --indigo:      #17497E;
+  --arc:         #5E8FBC;   /* 青海波の弧 */
+  --washi:       #F4EDDC;   /* 和紙 */
+  --washi-dark:  #E7DCC2;
+  --paper:       #FBF6E8;   /* カードの紙 */
+  --ink:         #16233A;   /* 墨 */
+  --muted:       #8A7B60;
   --vermillion:  #C94040;   /* 朱 */
-  --vermillion-d:#8C2C2C;
-  --foam:        #EAE4D2;   /* 波の白 */
+  --vermillion-d:#B23A34;
+  --gold:        #A9822F;   /* 金茶 — フォルダの標 */
+
+  --font-mincho: 'Shippori Mincho', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-sans:   'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', Georgia, serif;
+  font-family: var(--font-mincho);
   background: var(--washi);
   color: var(--ink);
   min-height: 100vh;
@@ -27,134 +33,126 @@ body {
   flex-direction: column;
 }
 
+/* 紙目 — 和紙のテクスチャ (modal より下層) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='linear' slope='0.05'/></feComponentTransfer></filter><rect width='240' height='240' filter='url(%23n)'/></svg>");
+}
+
+:focus-visible {
+  outline: 3px solid var(--vermillion);
+  outline-offset: 2px;
+}
+
 /* ══════════════════════════════════════════════════════
-   HEADER — 富嶽三十六景に着想を得た版画風シーン
+   HEADER — 天ぼかし + 冨士 + 青海波
 ══════════════════════════════════════════════════════ */
 header {
   position: relative;
   overflow: hidden;
-  min-height: 430px;
-  padding: 4.8rem 1rem 112px;
-  text-align: center;
-  background: var(--prussian);
-  background-image: none;
+  padding: 5.2rem 1.5rem 158px;
+  background: linear-gradient(180deg, #F2EAD6 0%, #F5ECD4 52%, #EBDAB0 100%);
 }
 
+/* 天ぼかし — 広重の空 */
 header::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(6, 18, 42, 0.78) 0%,
-    rgba(6, 18, 42, 0.50) 35%,
-    rgba(6, 18, 42, 0.16) 62%,
-    rgba(6, 18, 42, 0.36) 100%
-  );
+  inset: 0 0 auto 0;
+  height: 156px;
+  background: linear-gradient(180deg,
+    rgba(13, 48, 96, 0.93) 0%,
+    rgba(13, 48, 96, 0.74) 28%,
+    rgba(13, 48, 96, 0.44) 55%,
+    rgba(13, 48, 96, 0.18) 78%,
+    rgba(13, 48, 96, 0.05) 92%,
+    rgba(13, 48, 96, 0) 100%);
   pointer-events: none;
-  z-index: 1;
 }
 
-.hokusai-scene {
+.fuji-scene {
   position: absolute;
-  inset: 0;
+  right: -2%;
+  bottom: 104px;
+  width: min(54vw, 620px);
+  height: auto;
+  pointer-events: none;
+  animation: riseIn 0.9s ease 0.1s both;
+}
+
+/* 青海波 — 幾何学の海 (SVG 鱗紋) */
+.sea {
+  position: absolute;
+  inset: auto 0 0 0;
   width: 100%;
-  height: 100%;
+  height: 118px;
   display: block;
-  transform: scale(1.015);
-}
-
-.sun-disc {
-  mix-blend-mode: multiply;
-}
-
-.fuji,
-.sea-lines,
-.great-wave,
-.cartouche {
-  filter: drop-shadow(2px 3px 0 rgba(7, 20, 42, 0.22));
+  border-top: 4px solid var(--prussian);
 }
 
 .header-inner {
   position: relative;
-  z-index: 3;
-  width: min(640px, calc(100% - 2rem));
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 2.1rem 1.4rem 1.8rem;
+}
+
+/* 題簽 — 縦書きの朱札 (シグネチャ要素) */
+.cartouche {
+  flex-shrink: 0;
+  writing-mode: vertical-rl;
+  background: var(--vermillion-d);
+  color: #FBF3E2;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.42em;
+  padding: 1.15em 0.5em 0.85em;
+  border: 2px solid var(--prussian);
+  box-shadow: 4px 4px 0 rgba(13, 48, 96, 0.85);
+  min-height: 9.5em;
+  animation: dropIn 0.7s ease 0.25s both;
+}
+
+.title-block {
+  padding-top: 1.4rem;
+  animation: riseIn 0.8s ease 0.4s both;
 }
 
 #site-title {
-  font-size: clamp(2.35rem, 7vw, 4.65rem);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--foam);
-  text-shadow:
-    3px 3px 0 #0D3060,
-    0 2px 16px rgba(0, 0, 0, 0.46);
+  font-size: clamp(2.5rem, 6vw, 4.3rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  color: var(--prussian);
+  text-shadow: 3px 3px 0 rgba(231, 220, 194, 0.9);
 }
 
-/* 水平線の飾り */
 .header-rule {
-  width: min(220px, 58%);
-  height: 6px;
-  background:
-    linear-gradient(90deg, transparent 0 7%, var(--vermillion) 7% 21%, transparent 21% 29%, rgba(234, 228, 210, 0.82) 29% 100%);
-  margin: 1.1rem auto;
+  width: 200px;
+  height: 5px;
+  margin: 1.15rem 0 0.9rem;
+  background: linear-gradient(90deg,
+    var(--vermillion) 0 26%,
+    transparent 26% 34%,
+    var(--prussian) 34% 100%);
 }
 
-#site-subtitle {
-  font-size: clamp(0.82rem, 1.8vw, 1rem);
-  letter-spacing: 0.36em;
-  color: var(--foam);
-  opacity: 0.88;
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+.header-caption {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  color: var(--ink);
+  opacity: 0.62;
 }
-
-/* ══════════════════════════════════════════════════════
-   CONFIG BAR
-══════════════════════════════════════════════════════ */
-.config-bar {
-  background: var(--prussian);
-  padding: 0.85rem 1.5rem;
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  border-bottom: 3px solid var(--vermillion);
-}
-
-.config-bar input {
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-  padding: 0.45rem 0.85rem;
-  border: 1.5px solid #2A6090;
-  background: #091A2E;
-  color: var(--foam);
-  outline: none;
-  border-radius: 0;
-  transition: border-color 0.2s;
-}
-.config-bar input:focus       { border-color: var(--foam); }
-.config-bar input::placeholder { color: #4E7898; }
-
-#repo-input { width: 220px; }
-#path-input { width: 160px; }
-
-.btn-load {
-  padding: 0.45rem 1.4rem;
-  background: var(--vermillion);
-  color: #fff;
-  border: none;
-  border-radius: 0;
-  font-family: inherit;
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: background 0.18s, transform 0.1s;
-}
-.btn-load:hover  { background: var(--vermillion-d); }
-.btn-load:active { transform: scale(0.97); }
 
 /* ══════════════════════════════════════════════════════
    MAIN CONTENT
@@ -164,28 +162,61 @@ main {
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 3rem;
+  padding: 3rem 1.5rem 3.5rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+
+.section-head h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--prussian);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-head h2::before {
+  content: '';
+  width: 0.62em;
+  height: 0.62em;
+  background: var(--vermillion);
+  flex-shrink: 0;
+}
+
+.item-count {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
 }
 
 .pdf-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.7rem;
 }
 
 /* ══════════════════════════════════════════════════════
-   BREADCRUMB — パンくずナビ
+   BREADCRUMB
 ══════════════════════════════════════════════════════ */
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  margin-bottom: 1.4rem;
-  font-size: 0.88rem;
+  gap: 0.35rem;
+  margin: -0.6rem 0 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
   flex-wrap: wrap;
   color: var(--prussian);
-  border-left: 3px solid var(--vermillion);
-  padding-left: 0.75rem;
+  border-left: 4px solid var(--vermillion);
+  padding-left: 0.8rem;
 }
 
 .bc-link {
@@ -197,138 +228,109 @@ main {
   cursor: pointer;
   padding: 0;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(13, 48, 96, 0.4);
 }
-.bc-link:hover { color: var(--indigo); }
+.bc-link:hover { color: var(--vermillion); }
 
-.bc-sep { color: #AAA; padding: 0 0.1rem; }
+.bc-sep { color: var(--muted); padding: 0 0.15rem; }
 
-.bc-current { font-weight: 600; }
+.bc-current { font-weight: 700; }
 
 /* ══════════════════════════════════════════════════════
-   PDF CARD — 版画の額縁スタイル
-   ・直角コーナー (border-radius: 0)
-   ・オフセットシャドウ (版木ズレ)
-   ・上端に青海波帯 + 朱色ライン
+   PDF CARD — 連作版画: 其の一・其の二… の番号札を貼る
 ══════════════════════════════════════════════════════ */
 .pdf-card {
-  background: #FDFAF2;
+  position: relative;
+  background: var(--paper);
   border: 2px solid var(--prussian);
-  border-radius: 0;
   box-shadow: 5px 5px 0 var(--prussian);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  overflow: hidden;
-  animation: fadeUp 0.4s ease both;
+  animation: fadeUp 0.45s ease both;
   transition: transform 0.18s, box-shadow 0.18s;
 }
 
-.pdf-card:hover {
+.pdf-card:hover,
+.pdf-card:focus-within {
   transform: translate(-3px, -3px);
   box-shadow: 8px 8px 0 var(--prussian);
 }
 
-/* 青海波帯 (カード上端) */
-.card-band {
-  height: 36px;
-  flex-shrink: 0;
-  background-color: var(--prussian);
-  background-image:
-    radial-gradient(
-      circle at 100% 150%,
-      var(--prussian) 24%,
-      #4A90B8 25%, #4A90B8 28%,
-      var(--prussian) 29%, var(--prussian) 36%,
-      #4A90B8 36%, #4A90B8 40%,
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 0% 150%,
-      var(--prussian) 24%,
-      #4A90B8 25%, #4A90B8 28%,
-      var(--prussian) 29%, var(--prussian) 36%,
-      #4A90B8 36%, #4A90B8 40%,
-      transparent 40%
-    );
-  background-size: 18px 12px;
-  background-position: 0 0, 9px 0;
-  border-bottom: 3px solid var(--vermillion);
+/* 番号札 — 縦書きの短冊 (題簽のエコー) */
+.print-no {
+  position: absolute;
+  top: -7px;
+  right: 16px;
+  writing-mode: vertical-rl;
+  background: var(--vermillion-d);
+  color: #FBF3E2;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  padding: 0.7em 0.34em 0.55em;
+  border: 1.5px solid var(--prussian);
+  box-shadow: 2px 2px 0 rgba(13, 48, 96, 0.55);
 }
 
-/* フォルダカード */
-.folder-card { cursor: pointer; }
-.folder-card:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--prussian); }
-
-.folder-band {
-  height: 36px;
-  flex-shrink: 0;
-  background: var(--prussian);
-  border-bottom: 3px solid #C8A050;   /* 金色 — PDF の朱と区別 */
-}
-
-.btn-open {
-  width: 100%;
-  background: transparent;
-  color: var(--prussian);
-  border: 2px solid var(--prussian);
-}
-.btn-open:hover { background: var(--washi-dark); }
+.folder-card .print-no { background: var(--gold); }
 
 .card-body {
-  padding: 0.9rem 1.2rem 1.1rem;
+  padding: 1.15rem 1.2rem 1.2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
   flex: 1;
 }
 
-.card-icon svg { width: 46px; height: auto; }
-
-.card-info { text-align: center; width: 100%; }
-
-.card-name {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--prussian);
-  word-break: break-all;
-  line-height: 1.45;
-  margin-bottom: 0.25rem;
+.card-kind {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  color: var(--muted);
+  padding-right: 2.6rem;
 }
 
-.card-size {
-  font-size: 0.73rem;
-  color: #7A7060;
-  font-family: 'Courier New', monospace;
+.folder-card .card-kind { color: var(--gold); }
+
+.card-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--prussian);
+  word-break: break-all;
+  line-height: 1.55;
+  padding-right: 2.6rem;
+  flex: 1;
 }
 
 .card-actions {
   display: flex;
   gap: 0.55rem;
-  width: 100%;
-  margin-top: 0.3rem;
+  margin-top: 0.5rem;
 }
 
 .btn-view,
-.btn-download {
+.btn-download,
+.btn-open {
   flex: 1;
-  padding: 0.48rem 0;
-  border-radius: 0;
-  font-family: inherit;
-  font-size: 0.84rem;
-  letter-spacing: 0.08em;
+  padding: 0.5rem 0;
+  font-family: var(--font-mincho);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-align: center;
   cursor: pointer;
   text-decoration: none;
   border: 2px solid var(--prussian);
-  transition: background 0.18s, transform 0.1s;
+  transition: background 0.18s, color 0.18s, transform 0.1s;
 }
+
 .btn-view {
   background: var(--prussian);
-  color: var(--foam);
+  color: var(--washi);
 }
-.btn-view:hover { background: #051830; }
+.btn-view:hover { background: #082042; }
 
 .btn-download {
   background: transparent;
@@ -339,6 +341,15 @@ main {
 .btn-view:active,
 .btn-download:active { transform: scale(0.97); }
 
+/* フォルダカード */
+.folder-card { cursor: pointer; }
+
+.btn-open {
+  background: transparent;
+  color: var(--prussian);
+}
+.folder-card:hover .btn-open { background: var(--washi-dark); }
+
 /* ══════════════════════════════════════════════════════
    LOADING / ERROR
 ══════════════════════════════════════════════════════ */
@@ -347,7 +358,7 @@ main {
   padding: 3rem 0;
   color: var(--prussian);
   font-size: 1rem;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.2em;
 }
 .loading::after {
   content: '';
@@ -364,16 +375,78 @@ main {
 .error {
   text-align: center;
   padding: 1.8rem;
-  color: var(--vermillion);
+  color: var(--vermillion-d);
   font-size: 0.94rem;
-  background: #FFF6F6;
+  background: #FCF3ED;
   border: 2px solid var(--vermillion);
-  border-radius: 0;
-  box-shadow: 3px 3px 0 var(--vermillion);
+  box-shadow: 4px 4px 0 var(--vermillion);
   margin-top: 1rem;
 }
 
 .hidden { display: none !important; }
+
+/* ══════════════════════════════════════════════════════
+   CONFIG PANEL — 折りたたみ格納
+══════════════════════════════════════════════════════ */
+.config-panel {
+  margin-top: 3.2rem;
+}
+
+.config-panel summary {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  padding: 0.3rem 0.1rem;
+}
+.config-panel summary::before { content: '▸ '; }
+.config-panel[open] summary::before { content: '▾ '; }
+.config-panel summary:hover { color: var(--prussian); }
+
+.config-bar {
+  margin-top: 0.7rem;
+  background: var(--washi-dark);
+  border: 2px solid var(--prussian);
+  padding: 0.9rem 1rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.config-bar input {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 0.48rem 0.85rem;
+  border: 1.5px solid var(--prussian);
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.config-bar input:focus        { border-color: var(--vermillion); }
+.config-bar input::placeholder { color: var(--muted); }
+
+#repo-input { width: 230px; }
+#path-input { width: 170px; }
+
+.btn-load {
+  padding: 0.48rem 1.5rem;
+  background: var(--vermillion);
+  color: #fff;
+  border: 2px solid var(--vermillion-d);
+  font-family: var(--font-mincho);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+}
+.btn-load:hover  { background: var(--vermillion-d); }
+.btn-load:active { transform: scale(0.97); }
 
 /* ══════════════════════════════════════════════════════
    MODAL
@@ -381,7 +454,7 @@ main {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(6, 18, 36, 0.84);
+  background: rgba(9, 22, 42, 0.85);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -394,13 +467,12 @@ main {
 .modal-box {
   background: var(--washi);
   border: 2px solid var(--prussian);
-  border-radius: 0;
   width: 100%;
-  max-width: 860px;
+  max-width: 880px;
   height: 88vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 8px 8px 0 var(--prussian);
+  box-shadow: 8px 8px 0 rgba(13, 48, 96, 0.75);
   overflow: hidden;
 }
 
@@ -410,7 +482,7 @@ main {
   justify-content: space-between;
   padding: 0.82rem 1.2rem;
   background: var(--prussian);
-  color: var(--foam);
+  color: var(--washi);
   gap: 0.8rem;
   border-bottom: 3px solid var(--vermillion);
   flex-shrink: 0;
@@ -429,7 +501,7 @@ main {
 .btn-close {
   background: none;
   border: none;
-  color: var(--foam);
+  color: var(--washi);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -437,33 +509,41 @@ main {
   flex-shrink: 0;
   transition: color 0.15s;
 }
-.btn-close:hover { color: #FFCDD0; }
+.btn-close:hover { color: #F0B9B4; }
 
 #pdf-viewer {
   flex: 1;
   border: none;
   width: 100%;
+  background: #fff;
 }
 
 /* ══════════════════════════════════════════════════════
-   FOOTER
+   FOOTER — 青海波の帯で頭尾を揃える
 ══════════════════════════════════════════════════════ */
 footer {
   background: var(--prussian);
   border-top: 3px solid var(--vermillion);
-  color: var(--foam);
-  padding: 0.9rem 1rem;
+  color: var(--washi);
+  padding: 1.15rem 1rem;
   text-align: center;
   font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  opacity: 0.92;
+  letter-spacing: 0.16em;
 }
 
 /* ══════════════════════════════════════════════════════
    ANIMATIONS
 ══════════════════════════════════════════════════════ */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadein {
@@ -474,27 +554,58 @@ footer {
   to { transform: rotate(360deg); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
 /* ══════════════════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════════════════ */
-@media (max-width: 600px) {
-  header {
-    min-height: 360px;
-    padding: 3.6rem 1rem 86px;
+@media (max-width: 640px) {
+  header { padding: 4rem 1.1rem 128px; }
+
+  header::before { height: 96px; }
+
+  .fuji-scene {
+    width: 88vw;
+    right: -26%;
+    bottom: 78px;
+    opacity: 0.9;
   }
 
-  .hokusai-scene {
-    width: 160%;
-    left: -34%;
+  .fuji-scene .sun-disc { display: none; }
+
+  .sea { height: 92px; }
+
+  .header-inner { gap: 1.3rem; }
+
+  .cartouche {
+    font-size: 0.92rem;
+    min-height: 8em;
+    box-shadow: 3px 3px 0 rgba(13, 48, 96, 0.85);
   }
 
-  .header-inner {
-    padding: 1.55rem 0.4rem 1.35rem;
-  }
+  .title-block { padding-top: 0.6rem; }
 
-  .config-bar { gap: 0.5rem; }
-  #repo-input  { width: 100%; }
-  #path-input  { width: 100%; }
-  .btn-load    { width: 100%; }
-  .modal-box   { height: 92vh; }
+  .header-rule { width: 150px; }
+
+  main { padding: 2.4rem 1.1rem 3rem; }
+
+  .pdf-grid { grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+
+  .card-actions { flex-direction: column; }
+
+  #repo-input, #path-input, .btn-load { width: 100%; }
+
+  .modal { padding: 0.8rem; }
+  .modal-box { height: 92vh; }
+}
+
+@media (max-width: 420px) {
+  .pdf-grid { grid-template-columns: 1fr; }
 }
