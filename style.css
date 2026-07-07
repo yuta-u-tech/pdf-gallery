@@ -81,9 +81,26 @@ header::before {
   bottom: 104px;
   width: min(54vw, 620px);
   height: auto;
+  overflow: visible;
   pointer-events: none;
   animation: riseIn 0.9s ease 0.1s both;
 }
+
+.fuji-scene .sun-hit-area {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.fuji-scene .sun-control:has(.sun-hit-area:hover) .sun-disc,
+.fuji-scene .sun-control:has(.sun-hit-area:focus-visible) .sun-disc {
+  filter: brightness(1.12);
+}
+
+.fuji-scene .sun-hit-area.is-dragging { cursor: grabbing; }
+
+.fuji-scene .sun-disc,
+.fuji-scene .sun-glow { pointer-events: none; }
 
 /* 青海波 — 幾何学の海 (SVG 鱗紋) */
 .sea {
@@ -93,6 +110,7 @@ header::before {
   height: 118px;
   display: block;
   border-top: 4px solid var(--prussian);
+  pointer-events: none;
 }
 
 .header-inner {
@@ -103,6 +121,7 @@ header::before {
   gap: 2rem;
   max-width: 1100px;
   margin: 0 auto;
+  pointer-events: none;
 }
 
 /* 題簽 — 縦書きの朱札 (シグネチャ要素) */
@@ -578,7 +597,9 @@ footer {
     opacity: 0.9;
   }
 
-  .fuji-scene .sun-disc { display: none; }
+  .fuji-scene .sun-disc,
+  .fuji-scene .sun-glow,
+  .fuji-scene .sun-hit-area { display: block; }
 
   .sea { height: 92px; }
 

@@ -13,15 +13,30 @@
 
   <!-- ── Header: 版画風 — 天ぼかし・朱の題簽・冨士・青海波 ── -->
   <header>
-    <svg class="fuji-scene" viewBox="0 0 760 330" aria-hidden="true"
+    <svg class="fuji-scene" viewBox="0 0 760 330" role="img"
+         aria-label="太陽をドラッグすると富士山への光の当たり方が変わります"
          xmlns="http://www.w3.org/2000/svg">
-      <circle class="sun-disc" cx="146" cy="88" r="50" fill="#C94040"/>
-      <path d="M20 322 C210 300 330 214 352 58 L408 58 C432 214 552 300 742 322 Z"
+      <defs>
+        <filter id="sun-glow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="8"/>
+        </filter>
+      </defs>
+      <path class="mountain-body"
+            d="M20 322 C210 300 330 214 352 58 L408 58 C432 214 552 300 742 322 Z"
             fill="#17497E" stroke="#0D3060" stroke-width="5" stroke-linejoin="round"/>
-      <path d="M408 58 C432 214 552 300 742 322 L628 322 C528 266 456 184 430 90 Z"
+      <path class="mountain-shadow"
+            d="M408 58 C432 214 552 300 742 322 L628 322 C528 266 456 184 430 90 Z"
             fill="#0D3060" opacity="0.24"/>
       <path d="M352 58 L408 58 C414 96 421 126 431 152 L404 130 L377 154 L350 130 L324 152 C334 124 344 94 352 58 Z"
             fill="#F4EDDC" stroke="#0D3060" stroke-width="5" stroke-linejoin="round"/>
+      <g class="sun-control">
+        <circle class="sun-glow" cx="146" cy="88" r="56" fill="#E26442"
+                opacity="0.22" filter="url(#sun-glow)"/>
+        <circle class="sun-disc" cx="146" cy="88" r="50" fill="#C94040"/>
+        <circle class="sun-hit-area" cx="146" cy="88" r="72" fill="transparent"
+                tabindex="0" role="slider" aria-label="太陽の位置"
+                aria-valuemin="0" aria-valuemax="100" aria-valuenow="18"/>
+      </g>
     </svg>
 
     <div class="header-inner">

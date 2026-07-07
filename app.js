@@ -9,8 +9,105 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('site-subtitle').textContent = CONFIG.siteSubtitle
   document.title = CONFIG.siteTitle
 
+  initSunlightInteraction()
+
   if (CONFIG.owner !== 'OWNER') loadPDFs()
 })
+
+// ── ヘッダーの太陽と富士山の光 ──────────────────────────────────────────────
+
+function initSunlightInteraction() {
+  const scene = document.querySelector('.fuji-scene')
+  const sun = scene?.querySelector('.sun-disc')
+  const glow = scene?.querySelector('.sun-glow')
+  const hitArea = scene?.querySelector('.sun-hit-area')
+  const mountain = scene?.querySelector('.mountain-body')
+  const mountainShadow = scene?.querySelector('.mountain-shadow')
+  const header = scene?.closest('header')
+  if (!scene || !sun || !glow || !hitArea || !mountain || !mountainShadow || !header) return
+
+  const initial = { x: 146, y: 88 }
+
+  const setSunPosition = (x, y) => {
+    const matrix = scene.getScreenCTM()
+    const headerRect = header.getBoundingClientRect()
+    if (matrix) {
+      const toSvg = (clientX, clientY) => {
+        const point = scene.createSVGPoint()
+        point.x = clientX
+        point.y = clientY
+        return point.matrixTransform(matrix.inverse())
+      }
+      const topLeft = toSvg(headerRect.left, headerRect.top)
+      const bottomRight = toSvg(headerRect.right, headerRect.bottom)
+      x = Math.max(topLeft.x + 54, Math.min(bottomRight.x - 54, x))
+      y = Math.max(topLeft.y + 54, Math.min(bottomRight.y - 54, y))
+    }
+
+    ;[sun, glow, hitArea].forEach(element => {
+      element.setAttribute('cx', x)
+      element.setAttribute('cy', y)
+    })
+
+    const lightFromLeft = x < 380
+    const direction = Math.max(-1, Math.min(1, (380 - x) / 326))
+    const height = Math.max(0, Math.min(1, 1 - ((y + 20) / 305)))
+    const dusk = Math.max(0, Math.min(1, (0.52 - height) / 0.52))
+    const mix = (daylight, sunset) => `color-mix(in srgb, ${daylight} ${(1 - dusk) * 100}%, ${sunset})`
+    mountain.setAttribute('fill', mix('#17497E', '#B94A32'))
+    mountainShadow.setAttribute('fill', mix('#0D3060', '#682A2A'))
+    mountainShadow.setAttribute('opacity', 0.1 + ((direction + 1) / 2) * 0.28)
+
+    const percent = Math.round(((direction * -1) + 1) * 50)
+    hitArea.setAttribute('aria-valuenow', percent)
+    hitArea.setAttribute('aria-valuetext', `${lightFromLeft ? '左' : '右'}からの光、高さ${Math.round(height * 100)}%`)
+  }
+
+  const eventToSvgPoint = event => {
+    const point = scene.createSVGPoint()
+    point.x = event.clientX
+    point.y = event.clientY
+    return point.matrixTransform(scene.getScreenCTM().inverse())
+  }
+
+  hitArea.addEventListener('pointerdown', event => {
+    event.preventDefault()
+    hitArea.setPointerCapture(event.pointerId)
+    hitArea.classList.add('is-dragging')
+    const point = eventToSvgPoint(event)
+    setSunPosition(point.x, point.y)
+  })
+
+  hitArea.addEventListener('pointermove', event => {
+    if (!hitArea.hasPointerCapture(event.pointerId)) return
+    const point = eventToSvgPoint(event)
+    setSunPosition(point.x, point.y)
+  })
+
+  const stopDragging = event => {
+    if (hitArea.hasPointerCapture(event.pointerId)) hitArea.releasePointerCapture(event.pointerId)
+    hitArea.classList.remove('is-dragging')
+  }
+  hitArea.addEventListener('pointerup', stopDragging)
+  hitArea.addEventListener('pointercancel', stopDragging)
+
+  hitArea.addEventListener('keydown', event => {
+    const step = event.shiftKey ? 24 : 10
+    let x = Number(hitArea.getAttribute('cx'))
+    let y = Number(hitArea.getAttribute('cy'))
+    if (event.key === 'ArrowLeft') x -= step
+    else if (event.key === 'ArrowRight') x += step
+    else if (event.key === 'ArrowUp') y -= step
+    else if (event.key === 'ArrowDown') y += step
+    else if (event.key === 'Home') ({ x, y } = initial)
+    else return
+    event.preventDefault()
+    setSunPosition(x, y)
+  })
+
+  hitArea.addEventListener('dblclick', () => setSunPosition(initial.x, initial.y))
+  setSunPosition(initial.x, initial.y)
+}
 
 // ── ロード ────────────────────────────────────────────────────────────────────
 
