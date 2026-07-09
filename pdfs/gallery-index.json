@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "type": "file",
+      "name": "データ構造とアルゴリズム.pdf",
+      "path": "pdfs/データ構造とアルゴリズム.pdf",
+      "parent": "pdfs",
+      "size": 993793
+    },
+    {
+      "type": "dir",
+      "name": "受験数学",
+      "path": "pdfs/受験数学",
+      "parent": "pdfs"
+    },
+    {
+      "type": "file",
+      "name": "図形解法まとめ.pdf",
+      "path": "pdfs/受験数学/図形解法まとめ.pdf",
+      "parent": "pdfs/受験数学",
+      "size": 739208
+    }
+  ]
+}

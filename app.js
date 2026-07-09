@@ -1,6 +1,7 @@
 let currentOwner = CONFIG.owner
 let currentRepo  = CONFIG.repo
 let navStack     = []   // [{name, path}]
+let staticItems  = []
 
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('repo-input').value          = `${CONFIG.owner}/${CONFIG.repo}`
@@ -138,19 +139,8 @@ async function fetchContents(path) {
   errorEl.classList.add('hidden')
   loading.classList.remove('hidden')
 
-  const apiUrl = `https://api.github.com/repos/${currentOwner}/${currentRepo}/contents/${path}`
-
   try {
-    const res = await fetch(apiUrl)
-    if (!res.ok) {
-      const msg = res.status === 404
-        ? 'リポジトリまたはパスが見つかりません。'
-        : `GitHub API エラー: ${res.status}`
-      throw new Error(msg)
-    }
-
-    const items = await res.json()
-    if (!Array.isArray(items)) throw new Error('予期しないレスポンスです。')
+    const items = await getStaticContents(path)
 
     const dirs = items.filter(f => f.type === 'dir')
     const pdfs = items.filter(f => f.type === 'file' && f.name.toLowerCase().endsWith('.pdf'))
@@ -171,6 +161,20 @@ async function fetchContents(path) {
     loading.classList.add('hidden')
     showError(err.message)
   }
+}
+
+async function getStaticContents(path) {
+  if (staticItems.length === 0) {
+    const indexPath = CONFIG.indexPath || `${CONFIG.path}/gallery-index.json`
+    const res = await fetch(`${indexPath}?v=${Date.now()}`)
+    if (!res.ok) throw new Error(`PDF一覧ファイルを取得できませんでした: ${res.status}`)
+
+    const data = await res.json()
+    if (!Array.isArray(data.items)) throw new Error('PDF一覧ファイルの形式が不正です。')
+    staticItems = data.items
+  }
+
+  return staticItems.filter(item => item.parent === path)
 }
 
 // ── ナビゲーション ────────────────────────────────────────────────────────────
@@ -230,7 +234,7 @@ function buildFolderCard(dir, index) {
 
 function buildPdfCard(file, index) {
   const sizeKB      = (file.size / 1024).toFixed(1)
-  const downloadUrl = file.download_url
+  const downloadUrl = file.download_url || file.path
   const viewUrl     = `https://${currentOwner}.github.io/${currentRepo}/${file.path}`
 
   const card = document.createElement('article')
